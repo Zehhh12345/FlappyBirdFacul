@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mini Flappy Bird</title>
+  <title>Flappy Bird</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="gameCanvas"></canvas>
-  <button id="restartBtn">Jogar Novamente</button>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+  <button id="restartBtn" style="display:none;">Reiniciar</button>
+  <audio id="bgMusic" loop autoplay>
+    <source src="https://opengameart.org/sites/default/files/Peaceful%20Theme.mp3" type="audio/mpeg" />
+  </audio>
   <script src="game.js"></script>
 </body>
 </html>
