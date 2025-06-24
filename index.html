@@ -6,65 +6,54 @@
   <title>Mini Flappy Bird</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
     canvas {
       background: skyblue;
       display: block;
+      margin: 0 auto;
+    }
+    #restartBtn {
+      display: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 20px auto;
+      display: block;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #restartBtn:hover {
+      background-color: #218838;
     }
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas"></canvas>
-<div id="gameOver" style="
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 30px;
-  text-align: center;
-  border-radius: 10px;
-  display: none;
-  font-family: Arial, sans-serif;">
-  <h2>Game Over</h2>
-  <button onclick="resetGame()" style="
-    padding: 10px 20px;
-    margin-top: 10px;
-    font-size: 16px;
-    cursor: pointer;">Jogar Novamente</button>
-</div>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+  <button id="restartBtn">Jogar Novamente</button>
 
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-
-    // Redimensionar o canvas para ocupar a tela toda
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const restartBtn = document.getElementById("restartBtn");
 
     let frames = 0;
-    const gravity = 0.25;
-    const jump = -8;
-    const pipeGap = 180;
-    const pipeWidth = 60;
-
-    const birdImg = new Image();
-    birdImg.src = "https://raw.githubusercontent.com/sourabhv/FlapPyBird/master/assets/sprites/yellowbird-midflap.png"; // imagem de passaro
+    const gravity = 0.6;
+    const jump = -10;
+    const pipeGap = 150;
+    const pipeWidth = 50;
+    let animation;
 
     const bird = {
-      x: 100,
-      y: 200,
-      width: 40,
-      height: 40,
+      x: 50,
+      y: 150,
+      width: 30,
+      height: 30,
       velocity: 0,
 
       draw() {
-        ctx.drawImage(birdImg, this.x, this.y, this.width, this.height);
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(this.x, this.y, this.width, this.height);
       },
 
       update() {
@@ -80,7 +69,7 @@
     const pipes = [];
 
     function createPipe() {
-      const topHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
+      const topHeight = Math.floor(Math.random() * 250) + 50;
       pipes.push({
         x: canvas.width,
         top: topHeight,
@@ -123,34 +112,29 @@
       frames++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       bird.update();
+      bird.draw();
       updatePipes();
       drawPipes();
-      bird.draw();
 
       if (detectCollision()) {
-  document.getElementById("gameOver").style.display = "block";
-  return;
-}
+        cancelAnimationFrame(animation);
+        restartBtn.style.display = "block";
+        return;
+      }
 
-      requestAnimationFrame(gameLoop);
+      animation = requestAnimationFrame(gameLoop);
     }
 
     document.addEventListener("keydown", function (e) {
       if (e.code === "Space") bird.flap();
     });
 
+    restartBtn.addEventListener("click", () => {
+      document.location.reload();
+    });
+
     createPipe();
     gameLoop();
-  
-    function resetGame() {
-  bird.y = 200;
-  bird.velocity = 0;
-  pipes.length = 0;
-  frames = 0;
-  createPipe();
-  document.getElementById("gameOver").style.display = "none";
-}
-
-</script>
+  </script>
 </body>
 </html>
