@@ -16,7 +16,7 @@ let score = 0;
 let gameOver = false;
 
 const birdImg = new Image();
-birdImg.src = "https://i.ibb.co/ZVG4ZbM/flappy-bird-sprite.png";
+birdImg.src = "https://openai-labs-public-images-prod.s3.amazonaws.com/user-avatars/flappy-bird/flappy-bird-sprite.png";
 
 const birdWidth = 40;
 const birdHeight = 30;
@@ -75,7 +75,7 @@ function gameLoop() {
   velocity += gravity;
   birdY += velocity;
 
-  ctx.drawImage(birdImg, birdX, birdY, birdWidth, birdHeight);
+  ctx.drawImage(birdImg, 0, 0, 34, 24, birdX, birdY, 40, 30);
 
   if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 300) {
     createPipe();
