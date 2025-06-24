@@ -17,8 +17,7 @@ let pipes = [];
 let score = 0;
 let gameOver = false;
 
-const birdImg = new Image();
-birdImg.src = "https://i.ibb.co/GF1bh5N/flappy-bird.png";
+const birdImg = document.getElementById("bird");
 
 const birdWidth = 40;
 const birdHeight = 30;
