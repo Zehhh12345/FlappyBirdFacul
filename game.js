@@ -78,6 +78,11 @@ function gameLoop() {
   velocity += gravity;
   birdY += velocity;
 
+  birdImg.onload = () => {
+  bgMusic.volume = 0.5;
+  gameLoop();
+};
+
   ctx.drawImage(birdImg, birdX, birdY, birdWidth, birdHeight);
 
   if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 300) {
