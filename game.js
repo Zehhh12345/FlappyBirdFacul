@@ -1,15 +1,19 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const restartBtn = document.getElementById("restartBtn");
-const bgMusic = document.getElementById("bgMusic");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const restartBtn = document.getElementById("restartBtn");
+const gameOverScreen = document.getElementById("gameOverScreen");
+const bgMusic = document.getElementById("bgMusic");
+
 const gravity = 0.25;
 const jump = -6;
-let birdY = canvas.height / 2;
+const birdWidth = 40;
+const birdHeight = 30;
+
 let birdX = canvas.width * 0.2;
+let birdY = canvas.height / 2;
 let velocity = 0;
 let pipes = [];
 let score = 0;
@@ -18,16 +22,14 @@ let gameOver = false;
 const birdImg = new Image();
 birdImg.src = "https://openai-labs-public-images-prod.s3.amazonaws.com/user-avatars/flappy-bird/flappy-bird-sprite.png";
 
-const birdWidth = 40;
-const birdHeight = 30;
-
 function resetGame() {
+  birdX = canvas.width * 0.2;
   birdY = canvas.height / 2;
   velocity = 0;
   pipes = [];
   score = 0;
   gameOver = false;
-  restartBtn.style.display = "none";
+  gameOverScreen.style.display = "none";
   gameLoop();
 }
 
@@ -75,7 +77,8 @@ function gameLoop() {
   velocity += gravity;
   birdY += velocity;
 
-  ctx.drawImage(birdImg, 0, 0, 34, 24, birdX, birdY, 40, 30);
+  // Corte da sprite (0, 0, 34x24) para desenhar o pássaro
+  ctx.drawImage(birdImg, 0, 0, 34, 24, birdX, birdY, birdWidth, birdHeight);
 
   if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 300) {
     createPipe();
@@ -92,7 +95,7 @@ function gameLoop() {
 
     if (checkCollision(pipes[i])) {
       gameOver = true;
-      restartBtn.style.display = "block";
+      gameOverScreen.style.display = "block";
       return;
     }
   }
@@ -107,22 +110,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-const restartBtn = document.getElementById("restartBtn");
-const gameOverScreen = document.getElementById("gameOverScreen");
-
-gameOver = true;
-gameOverScreen.style.display = "block";
-return
-
-function resetGame() {
-  birdY = canvas.height / 2;
-  velocity = 0;
-  pipes = [];
-  score = 0;
-  gameOver = false;
-  gameOverScreen.style.display = "none";
-  gameLoop();
-}
+restartBtn.addEventListener("click", resetGame);
 
 birdImg.onload = () => {
   bgMusic.volume = 0.5;
