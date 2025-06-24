@@ -9,8 +9,6 @@ const bgMusic = document.getElementById("bgMusic");
 
 const gravity = 0.25;
 const jump = -6;
-const birdWidth = 40;
-const birdHeight = 30;
 
 let birdX = canvas.width * 0.2;
 let birdY = canvas.height / 2;
@@ -20,7 +18,10 @@ let score = 0;
 let gameOver = false;
 
 const birdImg = new Image();
-birdImg.src = "https://i.ibb.co/F0D1qjJ/flappy-bird.png";
+birdImg.src = "https://i.ibb.co/GF1bh5N/flappy-bird.png";
+
+const birdWidth = 40;
+const birdHeight = 30;
 
 function resetGame() {
   birdX = canvas.width * 0.2;
