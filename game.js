@@ -107,7 +107,22 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-restartBtn.addEventListener("click", resetGame);
+const restartBtn = document.getElementById("restartBtn");
+const gameOverScreen = document.getElementById("gameOverScreen");
+
+gameOver = true;
+gameOverScreen.style.display = "block";
+return
+
+function resetGame() {
+  birdY = canvas.height / 2;
+  velocity = 0;
+  pipes = [];
+  score = 0;
+  gameOver = false;
+  gameOverScreen.style.display = "none";
+  gameLoop();
+}
 
 birdImg.onload = () => {
   bgMusic.volume = 0.5;
