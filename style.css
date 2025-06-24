@@ -1,20 +1,25 @@
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
   background-color: #70c5ce;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
+  overflow: hidden;
 }
 
 #gameCanvas {
-  border: 2px solid #000;
-  background-color: #70c5ce;
+  display: block;
+  width: 100vw;
+  height: 100vh;
 }
 
 #restartBtn {
-  margin-top: 10px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   padding: 10px 20px;
   font-size: 18px;
   background-color: #ffd700;
@@ -22,4 +27,5 @@ body {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  z-index: 10;
 }
