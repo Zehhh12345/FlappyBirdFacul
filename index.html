@@ -19,6 +19,25 @@
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
+<div id="gameOver" style="
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 10px;
+  display: none;
+  font-family: Arial, sans-serif;">
+  <h2>Game Over</h2>
+  <button onclick="resetGame()" style="
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 16px;
+    cursor: pointer;">Jogar Novamente</button>
+</div>
 
   <script>
     const canvas = document.getElementById("gameCanvas");
@@ -109,9 +128,9 @@
       bird.draw();
 
       if (detectCollision()) {
-        alert("Game Over!");
-        document.location.reload();
-      }
+  document.getElementById("gameOver").style.display = "block";
+  return;
+}
 
       requestAnimationFrame(gameLoop);
     }
@@ -122,6 +141,16 @@
 
     createPipe();
     gameLoop();
-  </script>
+  
+    function resetGame() {
+  bird.y = 200;
+  bird.velocity = 0;
+  pipes.length = 0;
+  frames = 0;
+  createPipe();
+  document.getElementById("gameOver").style.display = "none";
+}
+
+</script>
 </body>
 </html>
