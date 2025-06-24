@@ -1,23 +1,28 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const restartBtn = document.getElementById("restartBtn");
+const bgMusic = document.getElementById("bgMusic");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const gravity = 0.25;
 const jump = -6;
-let birdY = 150;
-let birdX = 80;
+let birdY = canvas.height / 2;
+let birdX = canvas.width * 0.2;
 let velocity = 0;
 let pipes = [];
 let score = 0;
 let gameOver = false;
 
 const birdImg = new Image();
-birdImg.src = "https://i.ibb.co/F0D1qjJ/flappy-bird.png"; // Imagem do Flappy Bird original
+birdImg.src = "https://i.ibb.co/ZVG4ZbM/flappy-bird-sprite.png";
 
-const bgMusic = document.getElementById("bgMusic");
+const birdWidth = 40;
+const birdHeight = 30;
 
 function resetGame() {
-  birdY = 150;
+  birdY = canvas.height / 2;
   velocity = 0;
   pipes = [];
   score = 0;
@@ -27,8 +32,8 @@ function resetGame() {
 }
 
 function createPipe() {
-  const topHeight = Math.random() * 200 + 50;
-  const gap = 120;
+  const topHeight = Math.random() * (canvas.height / 2);
+  const gap = canvas.height * 0.2;
   pipes.push({
     x: canvas.width,
     top: topHeight,
@@ -43,9 +48,6 @@ function drawPipe(pipe) {
 }
 
 function checkCollision(pipe) {
-  const birdWidth = 34;
-  const birdHeight = 24;
-
   if (
     birdX + birdWidth > pipe.x &&
     birdX < pipe.x + 50 &&
@@ -62,7 +64,7 @@ function checkCollision(pipe) {
 function drawScore() {
   ctx.fillStyle = "#fff";
   ctx.font = "32px Arial";
-  ctx.fillText(`Score: ${score}`, 10, 40);
+  ctx.fillText(`Score: ${score}`, 20, 50);
 }
 
 function gameLoop() {
@@ -73,14 +75,14 @@ function gameLoop() {
   velocity += gravity;
   birdY += velocity;
 
-  ctx.drawImage(birdImg, birdX, birdY, 34, 24);
+  ctx.drawImage(birdImg, birdX, birdY, birdWidth, birdHeight);
 
-  if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
+  if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 300) {
     createPipe();
   }
 
   for (let i = 0; i < pipes.length; i++) {
-    pipes[i].x -= 2;
+    pipes[i].x -= 3;
     drawPipe(pipes[i]);
 
     if (!pipes[i].passed && pipes[i].x + 50 < birdX) {
