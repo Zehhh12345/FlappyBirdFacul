@@ -16,16 +16,30 @@ html, body {
   height: 100vh;
 }
 
-#restartBtn {
+#gameOverScreen {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  font-size: 18px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border-radius: 10px;
+  z-index: 10;
+}
+
+#gameOverText {
+  color: white;
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+#restartBtn {
+  padding: 10px 30px;
+  font-size: 20px;
   background-color: #ffd700;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  z-index: 10;
 }
