@@ -2,106 +2,112 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const restartBtn = document.getElementById("restartBtn");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let frames = 0;
-const gravity = 0.5;
-const jump = -10;
-const pipeGap = 180;
-const pipeWidth = 60;
-let animation;
+const gravity = 0.25;
+const jump = -6;
+let birdY = 150;
+let birdX = 80;
+let velocity = 0;
+let pipes = [];
+let score = 0;
+let gameOver = false;
 
 const birdImg = new Image();
-birdImg.src = "https://upload.wikimedia.org/wikipedia/en/0/0a/Flappy_Bird.png";
+birdImg.src = "https://i.ibb.co/F0D1qjJ/flappy-bird.png"; // Imagem do Flappy Bird original
 
-const bird = {
-  x: 100,
-  y: canvas.height / 2,
-  width: 40,
-  height: 30,
-  velocity: 0,
+const bgMusic = document.getElementById("bgMusic");
 
-  draw() {
-    ctx.drawImage(birdImg, this.x, this.y, this.width, this.height);
-  },
-
-  update() {
-    this.velocity += gravity;
-    this.y += this.velocity;
-  },
-
-  flap() {
-    this.velocity = jump;
-  }
-};
-
-const pipes = [];
+function resetGame() {
+  birdY = 150;
+  velocity = 0;
+  pipes = [];
+  score = 0;
+  gameOver = false;
+  restartBtn.style.display = "none";
+  gameLoop();
+}
 
 function createPipe() {
-  const topHeight = Math.floor(Math.random() * (canvas.height / 2)) + 50;
+  const topHeight = Math.random() * 200 + 50;
+  const gap = 120;
   pipes.push({
     x: canvas.width,
     top: topHeight,
-    bottom: canvas.height - topHeight - pipeGap
+    bottom: canvas.height - topHeight - gap
   });
 }
 
-function drawPipes() {
+function drawPipe(pipe) {
   ctx.fillStyle = "green";
-  pipes.forEach(pipe => {
-    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.top);
-    ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipeWidth, pipe.bottom);
-  });
+  ctx.fillRect(pipe.x, 0, 50, pipe.top);
+  ctx.fillRect(pipe.x, canvas.height - pipe.bottom, 50, pipe.bottom);
 }
 
-function updatePipes() {
-  pipes.forEach(pipe => pipe.x -= 2);
+function checkCollision(pipe) {
+  const birdWidth = 34;
+  const birdHeight = 24;
 
-  if (pipes.length && pipes[0].x + pipeWidth < 0) {
-    pipes.shift();
+  if (
+    birdX + birdWidth > pipe.x &&
+    birdX < pipe.x + 50 &&
+    (birdY < pipe.top || birdY + birdHeight > canvas.height - pipe.bottom)
+  ) {
+    return true;
   }
-
-  if (frames % 100 === 0) createPipe();
+  if (birdY + birdHeight > canvas.height || birdY < 0) {
+    return true;
+  }
+  return false;
 }
 
-function detectCollision() {
-  for (let pipe of pipes) {
-    if (
-      bird.x < pipe.x + pipeWidth &&
-      bird.x + bird.width > pipe.x &&
-      (bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom)
-    ) {
-      return true;
-    }
-  }
-  return bird.y + bird.height > canvas.height || bird.y < 0;
+function drawScore() {
+  ctx.fillStyle = "#fff";
+  ctx.font = "32px Arial";
+  ctx.fillText(`Score: ${score}`, 10, 40);
 }
 
 function gameLoop() {
-  frames++;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  bird.update();
-  bird.draw();
-  updatePipes();
-  drawPipes();
+  if (gameOver) return;
 
-  if (detectCollision()) {
-    cancelAnimationFrame(animation);
-    restartBtn.style.display = "block";
-    return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  velocity += gravity;
+  birdY += velocity;
+
+  ctx.drawImage(birdImg, birdX, birdY, 34, 24);
+
+  if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
+    createPipe();
   }
 
-  animation = requestAnimationFrame(gameLoop);
+  for (let i = 0; i < pipes.length; i++) {
+    pipes[i].x -= 2;
+    drawPipe(pipes[i]);
+
+    if (!pipes[i].passed && pipes[i].x + 50 < birdX) {
+      score++;
+      pipes[i].passed = true;
+    }
+
+    if (checkCollision(pipes[i])) {
+      gameOver = true;
+      restartBtn.style.display = "block";
+      return;
+    }
+  }
+
+  drawScore();
+  requestAnimationFrame(gameLoop);
 }
 
-document.addEventListener("keydown", function (e) {
-  if (e.code === "Space") bird.flap();
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space" && !gameOver) {
+    velocity = jump;
+  }
 });
 
-restartBtn.addEventListener("click", () => {
-  document.location.reload();
-});
+restartBtn.addEventListener("click", resetGame);
 
-createPipe();
-gameLoop();
+birdImg.onload = () => {
+  bgMusic.volume = 0.5;
+  gameLoop();
+};
