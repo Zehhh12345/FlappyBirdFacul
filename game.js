@@ -13,7 +13,7 @@ const pipeWidth = 60;
 let animation;
 
 const birdImg = new Image();
-birdImg.src = "https://i.imgur.com/sN3PDR1.png";
+birdImg.src = "https://raw.githubusercontent.com/jgabrielfreitas/flappy-bird-assets/main/bird.png";
 
 const bird = {
   x: 100,
